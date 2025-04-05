@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Garante que está rodando como root
+if [ "$EUID" -ne 0 ]; then
+  echo "Por favor, execute como root (use sudo)"
+  exit 1
+fi
+
+echo "Atualizando o sistema..."
+apt-get updade -y  
+apt-get upgrade -y
+
+echo "Instalando Apache e Unzip..."
+apt-get install apache2 unzip -y #instala o apache e unzip
+
+echo "Baixando e extraindo site..."
+cd /tmp
+wget https://github.com/denilsonbonatti/linux-site-dio/archive/refs/heads/main.zip
+unzip -o main.zip 
+
+echo "Copiando arquivos para /var/www/html..."
+rm -rf /var/www/html/*
+cp -rv /tmp/linux-site-dio-main/* /var/www/html/
+
+echo "Reiniciando o Apache..."
+systemctl restart apache2
+
+echo "Processo concluído"
+
+
+
+
